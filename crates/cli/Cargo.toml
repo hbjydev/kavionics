@@ -11,3 +11,11 @@ name = "kavionics"
 path = "src/main.rs"
 
 [dependencies]
+kavionics-core.workspace = true
+kavionics-krpc.workspace = true
+kavionics-telemetry.workspace = true
+
+tokio.workspace = true
+anyhow.workspace = true
+tracing.workspace = true
+stayputnik.workspace = true

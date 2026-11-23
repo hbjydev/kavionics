@@ -1,0 +1,13 @@
+[package]
+name = "kavionics-krpc"
+license.workspace = true
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+
+[dependencies]
+async-trait.workspace = true
+kavionics-core.workspace = true
+stayputnik.workspace = true
+tokio.workspace = true

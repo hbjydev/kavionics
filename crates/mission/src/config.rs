@@ -1,8 +1,10 @@
 use std::path::Path;
 
-use anyhow::Result;
+use anyhow::{Context, Result};
 use cel::Program;
 use serde::Deserialize;
+
+use crate::condition::Condition;
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct MissionConfig {
@@ -36,27 +38,35 @@ impl MissionConfig {
 
     fn validate(&self) -> anyhow::Result<()> {
         for phase in &self.phases {
-            for action in &phase.actions {
+            for (idx, action) in phase.actions.iter().enumerate() {
                 match action {
-                    MissionAction::Stage => {}
                     MissionAction::Wait { seconds } => {
                         anyhow::ensure!(
                             seconds.is_finite() && *seconds >= 0.0,
-                            "wait seconds must be non-negative and finite"
+                            "wait seconds must be non-negative and finite in action {}:{}",
+                            phase.name, idx,
                         );
-                    }
+                    },
+
                     MissionAction::WaitUntil { condition } => {
-                        anyhow::ensure!(
-                            Program::compile(condition).is_ok(),
-                            "target altitude must be a valid CEL expression"
-                        );
-                    }
+                        Condition::compile(condition)
+                            .with_context(|| {
+                                format!(
+                                    "target altitude must be a valid CEL expression in action {}:{}",
+                                    phase.name, idx,
+                                )
+                            })?;
+                    },
+
                     MissionAction::SetThrottle { throttle } => {
                         anyhow::ensure!(
                             (0.0..=1.0).contains(throttle),
-                            "throttle must be between 0 and 1"
+                            "throttle must be between 0 and 1 in action {}:{}",
+                            phase.name, idx,
                         );
-                    }
+                    },
+
+                    _ => ()
                 }
             }
         }

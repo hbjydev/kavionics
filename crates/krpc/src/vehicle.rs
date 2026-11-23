@@ -20,10 +20,20 @@ impl KrpcVehicle {
     }
 
     async fn flight_state(&self) -> Result<FlightState, VehicleError> {
-        // Gather flight state data from the vessel and construct a FlightState
-        // struct
-        let reference_frame = self
+        let orbit = self
             .vessel
+            .orbit()
+            .await
+            .map_err(|e| VehicleError::Communication(Box::new(e)))?;
+
+        let body = orbit
+            .body()
+            .await
+            .map_err(|e| VehicleError::Communication(Box::new(e)))?;
+
+        // Measure speeds relative to the rotating surface. The vessel's own
+        // reference frame moves with it, so speeds in that frame are zero.
+        let reference_frame = body
             .reference_frame()
             .await
             .map_err(|e| VehicleError::Communication(Box::new(e)))?;
@@ -67,8 +77,8 @@ impl KrpcVehicle {
             .map_err(|e| VehicleError::Communication(Box::new(e)))?;
 
         Ok(ResourceState {
-            electric_charge: resources.amount("Electric Charge").await.map_err(|e| VehicleError::Communication(Box::new(e)))?.into(),
-            liquid_fuel: resources.amount("Liquid Fuel").await.map_err(|e| VehicleError::Communication(Box::new(e)))?.into(),
+            electric_charge: resources.amount("ElectricCharge").await.map_err(|e| VehicleError::Communication(Box::new(e)))?.into(),
+            liquid_fuel: resources.amount("LiquidFuel").await.map_err(|e| VehicleError::Communication(Box::new(e)))?.into(),
             oxidizer: resources.amount("Oxidizer").await.map_err(|e| VehicleError::Communication(Box::new(e)))?.into(),
         })
     }

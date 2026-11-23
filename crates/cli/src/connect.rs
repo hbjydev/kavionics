@@ -7,11 +7,7 @@ use tracing::info;
 
 pub async fn connect_vehicle() -> Result<KrpcVehicle> {
     let client_name = format!("kavionics {}", env!("CARGO_PKG_VERSION"));
-    let client = Client::connect(
-        &client_name,
-        "127.0.0.1",
-        50000,
-    )
+    let client = Client::connect(&client_name, "127.0.0.1", 50000)
         .await?
         .into_shared();
 
@@ -33,10 +29,7 @@ pub async fn connect_vehicle() -> Result<KrpcVehicle> {
         "Active vessel found"
     );
 
-    let vehicle = KrpcVehicle::new(
-        vessel.clone(),
-        Arc::new(space_center),
-    );
+    let vehicle = KrpcVehicle::new(vessel.clone(), Arc::new(space_center));
 
     Ok(vehicle)
 }

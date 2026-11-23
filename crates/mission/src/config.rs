@@ -43,29 +43,30 @@ impl MissionConfig {
                         anyhow::ensure!(
                             seconds.is_finite() && *seconds >= 0.0,
                             "wait seconds must be non-negative and finite in action {}:{}",
-                            phase.name, idx,
+                            phase.name,
+                            idx,
                         );
-                    },
+                    }
 
                     MissionAction::WaitUntil { condition } => {
-                        Condition::compile(condition)
-                            .with_context(|| {
-                                format!(
-                                    "target altitude must be a valid CEL expression in action {}:{}",
-                                    phase.name, idx,
-                                )
-                            })?;
-                    },
+                        Condition::compile(condition).with_context(|| {
+                            format!(
+                                "target altitude must be a valid CEL expression in action {}:{}",
+                                phase.name, idx,
+                            )
+                        })?;
+                    }
 
                     MissionAction::SetThrottle { throttle } => {
                         anyhow::ensure!(
                             (0.0..=1.0).contains(throttle),
                             "throttle must be between 0 and 1 in action {}:{}",
-                            phase.name, idx,
+                            phase.name,
+                            idx,
                         );
-                    },
+                    }
 
-                    _ => ()
+                    _ => (),
                 }
             }
         }

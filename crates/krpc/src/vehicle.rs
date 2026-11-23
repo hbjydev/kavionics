@@ -1,7 +1,10 @@
 use std::sync::Arc;
 
 use async_trait::async_trait;
-use kavionics_core::{Vehicle, VehicleControl, VehicleError, vessel_state::{FlightState, OrbitState, PropulsionState, ResourceState, VesselState}};
+use kavionics_core::{
+    Vehicle, VehicleControl, VehicleError,
+    vessel_state::{FlightState, OrbitState, PropulsionState, ResourceState, VesselState},
+};
 use stayputnik::services::space_center::{SpaceCenter, Vessel};
 
 #[derive(Clone)]
@@ -12,11 +15,17 @@ pub struct KrpcVehicle {
 
 impl KrpcVehicle {
     pub fn new(vessel: Vessel, space_center: Arc<SpaceCenter>) -> Self {
-        Self { vessel, space_center }
+        Self {
+            vessel,
+            space_center,
+        }
     }
 
     async fn universal_time(&self) -> Result<f64, VehicleError> {
-        self.space_center.ut().await.map_err(|e| VehicleError::Communication(Box::new(e)))
+        self.space_center
+            .ut()
+            .await
+            .map_err(|e| VehicleError::Communication(Box::new(e)))
     }
 
     async fn flight_state(&self) -> Result<FlightState, VehicleError> {
@@ -45,11 +54,27 @@ impl KrpcVehicle {
             .map_err(|e| VehicleError::Communication(Box::new(e)))?;
 
         Ok(FlightState {
-            altitude_asl: flight.mean_altitude().await.map_err(|e| VehicleError::Communication(Box::new(e)))?,
-            altitude_agl: flight.surface_altitude().await.map_err(|e| VehicleError::Communication(Box::new(e)))?,
-            vertical_speed: flight.vertical_speed().await.map_err(|e| VehicleError::Communication(Box::new(e)))?,
-            surface_speed: flight.speed().await.map_err(|e| VehicleError::Communication(Box::new(e)))?,
-            dynamic_pressure: flight.dynamic_pressure().await.map_err(|e| VehicleError::Communication(Box::new(e)))?.into(),
+            altitude_asl: flight
+                .mean_altitude()
+                .await
+                .map_err(|e| VehicleError::Communication(Box::new(e)))?,
+            altitude_agl: flight
+                .surface_altitude()
+                .await
+                .map_err(|e| VehicleError::Communication(Box::new(e)))?,
+            vertical_speed: flight
+                .vertical_speed()
+                .await
+                .map_err(|e| VehicleError::Communication(Box::new(e)))?,
+            surface_speed: flight
+                .speed()
+                .await
+                .map_err(|e| VehicleError::Communication(Box::new(e)))?,
+            dynamic_pressure: flight
+                .dynamic_pressure()
+                .await
+                .map_err(|e| VehicleError::Communication(Box::new(e)))?
+                .into(),
         })
     }
 
@@ -61,11 +86,26 @@ impl KrpcVehicle {
             .map_err(|e| VehicleError::Communication(Box::new(e)))?;
 
         Ok(OrbitState {
-            apoapsis: orbit.apoapsis().await.map_err(|e| VehicleError::Communication(Box::new(e)))?,
-            periapsis: orbit.periapsis().await.map_err(|e| VehicleError::Communication(Box::new(e)))?,
-            eccentricity: orbit.eccentricity().await.map_err(|e| VehicleError::Communication(Box::new(e)))?,
-            inclination: orbit.inclination().await.map_err(|e| VehicleError::Communication(Box::new(e)))?,
-            time_to_apoapsis: orbit.time_to_apoapsis().await.map_err(|e| VehicleError::Communication(Box::new(e)))?,
+            apoapsis: orbit
+                .apoapsis()
+                .await
+                .map_err(|e| VehicleError::Communication(Box::new(e)))?,
+            periapsis: orbit
+                .periapsis()
+                .await
+                .map_err(|e| VehicleError::Communication(Box::new(e)))?,
+            eccentricity: orbit
+                .eccentricity()
+                .await
+                .map_err(|e| VehicleError::Communication(Box::new(e)))?,
+            inclination: orbit
+                .inclination()
+                .await
+                .map_err(|e| VehicleError::Communication(Box::new(e)))?,
+            time_to_apoapsis: orbit
+                .time_to_apoapsis()
+                .await
+                .map_err(|e| VehicleError::Communication(Box::new(e)))?,
         })
     }
 
@@ -77,9 +117,21 @@ impl KrpcVehicle {
             .map_err(|e| VehicleError::Communication(Box::new(e)))?;
 
         Ok(ResourceState {
-            electric_charge: resources.amount("ElectricCharge").await.map_err(|e| VehicleError::Communication(Box::new(e)))?.into(),
-            liquid_fuel: resources.amount("LiquidFuel").await.map_err(|e| VehicleError::Communication(Box::new(e)))?.into(),
-            oxidizer: resources.amount("Oxidizer").await.map_err(|e| VehicleError::Communication(Box::new(e)))?.into(),
+            electric_charge: resources
+                .amount("ElectricCharge")
+                .await
+                .map_err(|e| VehicleError::Communication(Box::new(e)))?
+                .into(),
+            liquid_fuel: resources
+                .amount("LiquidFuel")
+                .await
+                .map_err(|e| VehicleError::Communication(Box::new(e)))?
+                .into(),
+            oxidizer: resources
+                .amount("Oxidizer")
+                .await
+                .map_err(|e| VehicleError::Communication(Box::new(e)))?
+                .into(),
         })
     }
 
@@ -91,11 +143,33 @@ impl KrpcVehicle {
             .map_err(|e| VehicleError::Communication(Box::new(e)))?;
 
         Ok(PropulsionState {
-            mass: self.vessel.mass().await.map_err(|e| VehicleError::Communication(Box::new(e)))?.into(),
-            available_thrust: self.vessel.available_thrust().await.map_err(|e| VehicleError::Communication(Box::new(e)))?.into(),
-            thrust: self.vessel.thrust().await.map_err(|e| VehicleError::Communication(Box::new(e)))?.into(),
-            throttle: control.throttle().await.map_err(|e| VehicleError::Communication(Box::new(e)))?.into(),
-            current_stage: control.current_stage().await.map_err(|e| VehicleError::Communication(Box::new(e)))?,
+            mass: self
+                .vessel
+                .mass()
+                .await
+                .map_err(|e| VehicleError::Communication(Box::new(e)))?
+                .into(),
+            available_thrust: self
+                .vessel
+                .available_thrust()
+                .await
+                .map_err(|e| VehicleError::Communication(Box::new(e)))?
+                .into(),
+            thrust: self
+                .vessel
+                .thrust()
+                .await
+                .map_err(|e| VehicleError::Communication(Box::new(e)))?
+                .into(),
+            throttle: control
+                .throttle()
+                .await
+                .map_err(|e| VehicleError::Communication(Box::new(e)))?
+                .into(),
+            current_stage: control
+                .current_stage()
+                .await
+                .map_err(|e| VehicleError::Communication(Box::new(e)))?,
         })
     }
 }
@@ -105,12 +179,7 @@ impl Vehicle for KrpcVehicle {
     async fn snapshot(&self) -> Result<VesselState, VehicleError> {
         let ut = self.universal_time().await?;
 
-        let (
-            flight,
-            orbit,
-            resources,
-            propulsion,
-        ) = tokio::try_join!(
+        let (flight, orbit, resources, propulsion) = tokio::try_join!(
             self.flight_state(),
             self.orbit_state(),
             self.resource_state(),
@@ -136,7 +205,10 @@ impl VehicleControl for KrpcVehicle {
             .await
             .map_err(|e| VehicleError::Communication(Box::new(e)))?;
 
-        control.set_throttle(throttle).await.map_err(|e| VehicleError::Communication(Box::new(e)))?;
+        control
+            .set_throttle(throttle)
+            .await
+            .map_err(|e| VehicleError::Communication(Box::new(e)))?;
         Ok(())
     }
 
@@ -147,7 +219,10 @@ impl VehicleControl for KrpcVehicle {
             .await
             .map_err(|e| VehicleError::Communication(Box::new(e)))?;
 
-        control.activate_next_stage().await.map_err(|e| VehicleError::Communication(Box::new(e)))?;
+        control
+            .activate_next_stage()
+            .await
+            .map_err(|e| VehicleError::Communication(Box::new(e)))?;
         Ok(())
     }
 }

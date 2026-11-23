@@ -19,6 +19,9 @@ pub async fn collect_telemetry<V>(
                     state,
                     received_at: std::time::Instant::now(),
                 };
+
+                tracing::debug!(snapshot = ?snapshot, "Telemetry collected");
+
                 let _ = telemetry_tx.send(Some(snapshot));
             }
             Err(e) => {

@@ -1,11 +1,20 @@
 [advisories]
 version = 2
-ignore = []
+ignore = [
+  "RUSTSEC-2026-0543", # chrono unmaintained
+  "RUSTSEC-2026-0555", # chrono unmaintained
+]
 
 [licenses]
 version = 2
 allow = [
   "Apache-2.0",
+  "MIT",
+  "Zlib",
+  "Unicode-3.0",
+  "CDLA-Permissive-2.0",
+  "ISC",
+  "BSD-3-Clause",
 ]
 confidence-threshold = 0.8
 

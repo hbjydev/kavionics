@@ -17,7 +17,7 @@ kavionics-mission = { path = "crates/mission" }
 
 async-trait = "0.1"
 cel = "0.16"
-stayputnik = { path = "../stayputnik" }
+stayputnik = { git = "https://github.com/hbjydev/stayputnik.git", branch = "feat/krpc-0.8.0" }
 tokio = { version = "1.54", features = ["full"] }
 anyhow = "1.0"
 thiserror = "2.0"

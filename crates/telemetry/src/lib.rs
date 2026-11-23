@@ -3,7 +3,7 @@ use std::sync::LazyLock;
 use tracing_subscriber::{EnvFilter, Layer, Registry, filter::Filtered, layer::SubscriberExt, util::SubscriberInitExt};
 
 pub const DEFAULT_LOG_FILTER: &str = "info";
-pub const LOG_FORMAT: LazyLock<&str> = LazyLock::new(|| {
+pub static LOG_FORMAT: LazyLock<&str> = LazyLock::new(|| {
     let format = std::env::var("KAVIONICS_LOG_FORMAT")
         .unwrap_or_else(|_| "plain".to_string());
 
@@ -27,7 +27,7 @@ pub fn init_tracing() {
         "pretty" => {
             tracing_subscriber::fmt::layer().pretty().boxed()
         },
-        "plain" | _ => {
+        _ => {
             tracing_subscriber::fmt::layer().boxed()
         },
     }

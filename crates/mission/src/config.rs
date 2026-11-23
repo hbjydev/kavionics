@@ -1,7 +1,6 @@
 use std::path::Path;
 
 use anyhow::{Context, Result};
-use cel::Program;
 use serde::Deserialize;
 
 use crate::condition::Condition;

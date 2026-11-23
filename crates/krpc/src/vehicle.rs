@@ -95,7 +95,7 @@ impl KrpcVehicle {
             available_thrust: self.vessel.available_thrust().await.map_err(|e| VehicleError::Communication(Box::new(e)))?.into(),
             thrust: self.vessel.thrust().await.map_err(|e| VehicleError::Communication(Box::new(e)))?.into(),
             throttle: control.throttle().await.map_err(|e| VehicleError::Communication(Box::new(e)))?.into(),
-            current_stage: control.current_stage().await.map_err(|e| VehicleError::Communication(Box::new(e)))?.into(),
+            current_stage: control.current_stage().await.map_err(|e| VehicleError::Communication(Box::new(e)))?,
         })
     }
 }

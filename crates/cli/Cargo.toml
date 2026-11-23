@@ -1,0 +1,13 @@
+[package]
+name = "kavionics-cli"
+license.workspace = true
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "kavionics"
+path = "src/main.rs"
+
+[dependencies]

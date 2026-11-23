@@ -1,0 +1,49 @@
+name = "First Flight"
+
+launch {
+  throttle = 1.0
+  targetAltitude = 10000.0
+}
+
+phases = new Listing {
+  new {
+    name = "engine-start"
+    actions = new Listing {
+      new { action = "set-throttle"; throttle = 1.0 }
+      new { action = "stage" }
+    }
+  }
+  new {
+    name = "ascent"
+    actions = new Listing {
+      new {
+        action = "wait-until";
+        condition = """
+          vehicle.flight.altitude_asl >= 5000.0
+        """
+      }
+      new { action = "set-throttle"; throttle = 0.0 }
+    }
+  }
+  new {
+    name = "coast"
+    actions = new Listing {
+      new { action = "wait"; seconds = 0.25 }
+    }
+  }
+  new {
+    name = "recovery-prep"
+    actions = new Listing {
+      // separate booster from probe core
+      new { action = "stage" }
+      // wait a moment for the booster to clear the probe core
+      new { action = "wait"; seconds = 2.0 }
+      // detach nosecone from the probe core
+      new { action = "stage" }
+      // wait a moment for the nosecone to clear the probe core
+      new { action = "wait"; seconds = 2.0 }
+      // arm parachutes
+      new { action = "stage" }
+    }
+  }
+}

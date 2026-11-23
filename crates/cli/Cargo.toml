@@ -14,6 +14,7 @@ path = "src/main.rs"
 kavionics-core.workspace = true
 kavionics-krpc.workspace = true
 kavionics-telemetry.workspace = true
+kavionics-mission.workspace = true
 
 tokio.workspace = true
 anyhow.workspace = true

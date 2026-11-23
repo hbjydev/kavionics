@@ -1,4 +1,6 @@
-#[derive(Debug, Clone)]
+use serde::Serialize;
+
+#[derive(Debug, Clone, Serialize)]
 pub struct VesselState {
     /// KSP universal time, in seconds.
     pub ut: f64,
@@ -9,7 +11,7 @@ pub struct VesselState {
     pub propulsion: PropulsionState,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct FlightState {
     /// Altitude above sea level, in meters.
     pub altitude_asl: f64,
@@ -27,7 +29,7 @@ pub struct FlightState {
     pub dynamic_pressure: f64,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct OrbitState {
     pub apoapsis: f64,
     pub periapsis: f64,
@@ -36,14 +38,14 @@ pub struct OrbitState {
     pub time_to_apoapsis: f64,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct ResourceState {
     pub electric_charge: f64,
     pub liquid_fuel: f64,
     pub oxidizer: f64,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct PropulsionState {
     /// Vessel mass, in kilograms.
     pub mass: f64,

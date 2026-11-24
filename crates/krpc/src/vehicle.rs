@@ -8,12 +8,12 @@ use kavionics_core::{
 use stayputnik::services::space_center::{SpaceCenter, Vessel};
 
 #[derive(Clone)]
-pub struct KrpcVehicle {
+pub struct KspVehicle {
     space_center: Arc<SpaceCenter>,
     vessel: stayputnik::services::space_center::Vessel,
 }
 
-impl KrpcVehicle {
+impl KspVehicle {
     pub fn new(vessel: Vessel, space_center: Arc<SpaceCenter>) -> Self {
         Self {
             vessel,
@@ -175,7 +175,7 @@ impl KrpcVehicle {
 }
 
 #[async_trait]
-impl Vehicle for KrpcVehicle {
+impl Vehicle for KspVehicle {
     async fn snapshot(&self) -> Result<VesselState, VehicleError> {
         let ut = self.universal_time().await?;
 
@@ -197,7 +197,7 @@ impl Vehicle for KrpcVehicle {
 }
 
 #[async_trait]
-impl VehicleControl for KrpcVehicle {
+impl VehicleControl for KspVehicle {
     async fn set_throttle(&self, throttle: f32) -> Result<(), VehicleError> {
         let control = self
             .vessel

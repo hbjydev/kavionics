@@ -1624,7 +1624,7 @@ checksum = "6ce2be8dc25455e1f91df71bfa12ad37d7af1092ae736f3a6cd0e37bc7810596"
 [[package]]
 name = "stayputnik"
 version = "0.1.1"
-source = "git+https://github.com/hbjydev/stayputnik.git?branch=feat%2Fkrpc-0.8.0#775262396cd4be74cbe729baf2ab4458da6657ff"
+source = "git+https://github.com/hbjydev/stayputnik.git?branch=feat%2Fkrpc-0.8.0#781e90765b3179276589727e7fe639cbeba1d075"
 dependencies = [
  "futures-core",
  "heck",
